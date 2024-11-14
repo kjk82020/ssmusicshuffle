@@ -1,33 +1,19 @@
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.label import Label
-from kivy.uix.filechooser import FileChooserListView
+from kivy.lang import Builder
 import json
 import random
 
-class PlaylistShufflerApp(App):
-    def build(self):
-        self.layout = BoxLayout(orientation='vertical')
-        self.file_chooser = FileChooserListView(path='/')
-        self.shuffle_button = Button(text='Shuffle Playlist', on_press=self.shuffle_playlist)
-        self.result_label = Label(text='Select a .smpl file and press Shuffle')
-
-        self.layout.add_widget(self.file_chooser)
-        self.layout.add_widget(self.shuffle_button)
-        self.layout.add_widget(self.result_label)
-
-        return self.layout
-
-    def shuffle_playlist(self, instance):
-        selected_file = self.file_chooser.selection
+class PlaylistShufflerLayout(BoxLayout):
+    def shuffle_playlist(self):
+        selected_file = self.ids.filechooser.selection
         if not selected_file:
-            self.result_label.text = 'Please select a .smpl file'
+            self.ids.result_label.text = 'Please select a .smpl file'
             return
 
         playlist_file = selected_file[0]
         if not playlist_file.endswith('.smpl'):
-            self.result_label.text = 'Please select a valid .smpl file'
+            self.ids.result_label.text = 'Please select a valid .smpl file'
             return
 
         try:
@@ -54,9 +40,14 @@ class PlaylistShufflerApp(App):
             with open(playlist_file, 'w', encoding='utf-8') as file:
                 file.write(shuffled_playlist)
 
-            self.result_label.text = f'Playlist shuffled and saved:\n{playlist_file}'
+            self.ids.result_label.text = f'Playlist shuffled and saved:\n{playlist_file}'
         except Exception as e:
-            self.result_label.text = f'Error: {str(e)}'
+            self.ids.result_label.text = f'Error: {str(e)}'
+
+class PlaylistShufflerApp(App):
+    def build(self):
+        return PlaylistShufflerLayout()
 
 if __name__ == '__main__':
+    Builder.load_file('smshuffle.kv')
     PlaylistShufflerApp().run()
