@@ -1,0 +1,26 @@
+#:kivy 2.1.0
+
+<PlaylistShufflerLayout>:
+    orientation: 'vertical'
+    padding: 10
+    spacing: 10
+
+    FileChooserListView:
+        id: filechooser
+        path: '/'
+        filters: ['*.smpl']
+
+    Button:
+        text: 'Shuffle Playlist'
+        size_hint_y: None
+        height: '48dp'
+        on_press: root.shuffle_playlist()
+
+    Label:
+        id: result_label
+        text: 'Select a .smpl file and press Shuffle'
+        size_hint_y: None
+        height: '48dp'
+        text_size: self.size
+        halign: 'center'
+        valign: 'middle'
